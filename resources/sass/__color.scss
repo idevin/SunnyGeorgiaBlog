@@ -1,0 +1,36 @@
+:root {
+    --white: #fff;
+    --primary: #667EEA;
+    --gray: #E2E8F0;
+    --text-gray: #718096;
+    --dark: #2D3748;
+    --gray-dark: #A0AEBF;
+    --gray-light: #F5F5F5;
+    --gray-light2: #99A6B7;
+    --gray-light3: #838C99;
+    --gradient: linear-gradient(90deg, #F48764 0%, #FFC551 100%);
+    --logo: url('../images/svg/logo.svg');
+    --search: url('../images/svg/search1.svg');
+    --thema: url('../images/svg/sunMob.svg');
+    --close: url('../images/svg/close_light.svg');
+    --left: 2px;
+    --white-bg: url('../images/png/our-top-bg-w.png')
+}
+
+:root[date-theme = 'dark'] {
+    --white: #2D3748;
+    --gray: #718096;
+    --gray-light: rgba(26, 32, 44, 1);
+    --gray-dark: #E2E8F0;
+    --text-gray: #EDF2F7;
+    --gray-light2: #A3B5D0;
+    --gray-light3: #EDF2F7;
+    --dark: #E2E8F0;
+    --logo: url('../images/svg/logo-white.svg');
+    --thema: url('../images/svg/nightMob.svg');
+    --close: url('../images/svg/close_dark.svg');
+    --search: url('../images/svg/search2.svg');
+    --gradient: linear-gradient(90deg, #4E54EF 0%, #922CBB 100%);
+    --left: 27px;
+    --white-bg: url('../images/png/our-top-bg-d.png')
+}

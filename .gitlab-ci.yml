@@ -1,0 +1,69 @@
+stages:
+  - development
+  - master
+
+deploy:development:
+  stage: development
+  before_script:
+    - 'which ssh-agent || ( apk add --update --no-cache openssh )'
+    - eval $(ssh-agent -s)
+    - ssh-add - <<< "${DEV_KEY}"
+  script:
+    - ssh -A -t -o StrictHostKeyChecking=no -l root 188.124.36.64
+      "cd /home/blog_dev ; bash -c '
+      git reset --hard HEAD &&
+      git clean -f -d &&
+      git fetch && git pull &&
+      composer install --no-progress --no-scripts --no-ansi &&
+      php artisan cache:clear &&
+      php artisan event:clear &&
+      php artisan view:clear &&
+      php artisan config:clear &&
+      php artisan clear-compiled &&
+      php artisan config:cache &&
+      php artisan media-library:regenerate &&
+      redis-cli flushall &&
+      php artisan migrate -n --force &&
+      php artisan db:seed --class=UpdateSeeder -n --force &&
+      service supervisor restart &&
+      php artisan media-library:regenerate --force &&
+      source /root/.nvm/nvm.sh &&
+      nvm use 17 &&
+      export NODE_OPTIONS=--openssl-legacy-provider &&
+      npm install &&
+      npm run production '"
+  only:
+    - development
+
+deploy:master:
+  stage: master
+  before_script:
+    - 'which ssh-agent || ( apk add --update --no-cache openssh )'
+    - eval $(ssh-agent -s)
+    - ssh-add - <<< "${DEV_KEY}"
+  script:
+    - ssh -A -t -o StrictHostKeyChecking=no -l root 188.124.36.64
+      "cd /home/blog ; bash -c '
+      git reset --hard HEAD &&
+      git clean -f -d &&
+      git fetch && git pull &&
+      composer install --no-progress --no-scripts --no-ansi &&
+      php artisan cache:clear &&
+      php artisan event:clear &&
+      php artisan view:clear &&
+      php artisan config:clear &&
+      php artisan clear-compiled &&
+      php artisan config:cache &&
+      php artisan media-library:regenerate &&
+      redis-cli flushall &&
+      php artisan migrate -n --force &&
+      php artisan db:seed --class=UpdateSeeder -n --force &&
+      service supervisor restart &&
+      php artisan media-library:regenerate --force &&
+      source /root/.nvm/nvm.sh &&
+      nvm use 17 &&
+      export NODE_OPTIONS=--openssl-legacy-provider &&
+      npm install &&
+      npm run production '"
+  only:
+    - master
